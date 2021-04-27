@@ -2,12 +2,6 @@
 const mysql = require('mysql');
 const inquirer = require('inquirer');
 
-// CRUD elements organized into separate js files for the sake of making code readable
-// const add = require('./crud-elements/add');
-// const view = require('./crud-elements/view');
-// const update = require('./crud-elements/update');
-// const del = require('./crud-elements/delete')
-
 // establish mysql server
 const connection = mysql.createConnection({
     // define host
@@ -97,7 +91,7 @@ const addData = () => {
                     break;
 
                 default:
-                    console.log(`Invalid action: ${answer.action}`);
+                    console.log(`Invalid action: ${answer.addChoice}`);
                     break;
             }
         })
@@ -211,7 +205,7 @@ const addEmployee = () => {
 // inquirer prompt for the user to view specific information in the database if they select 'view'
 const viewData = () => {
     inquirer.prompt({
-        type: 'rawlist',
+        type: 'list',
         name: 'viewChoice',
         message: 'What would you like to view?',
         choices: [
@@ -220,25 +214,25 @@ const viewData = () => {
             'View employees',
         ]
     })
-    .then((answer) => {
-        switch (answer.userChoice) {
-            case 'View department':
-                viewDepartment();
-                break;
+        .then((answer) => {
+            switch (answer.viewChoice) {
+                case 'View department':
+                    viewDepartment();
+                    break;
 
-            case 'View role':
-                viewRole();
-                break;
+                case 'View role':
+                    viewRole();
+                    break;
 
-            case 'View employee':
-                viewEmployee();
-                break;
+                case 'View employee':
+                    viewEmployee();
+                    break;
 
-            default:
-                console.log(`Invalid action: ${answer.action}`);
-                break;
-        }
-    })
+                default:
+                    console.log(`Invalid action: ${answer.viewChoice}`);
+                    break;
+            }
+        })
 };
 
 // view registered departments
@@ -263,41 +257,115 @@ const viewEmployee = () => {
     });
 }
 
-
-
 // inquirer prompt for the user to update information within the database if they select 'update'
 const updateData = () => {
     inquirer.prompt({
-        type: 'rawlist',
-        name: 'viewChoice',
+        type: 'list',
+        name: 'updateChoice',
         message: 'What would you like to view?',
         choices: [
             'Update employee role',
             'Update employee manager'
         ]
     })
-    .then((answer) => {
-        switch (answer.userChoice) {
-            case 'Update employee role':
-                update.updateRole();
-                break;
+        .then((answer) => {
+            switch (answer.updateChoice) {
+                case 'Update employee role':
+                    updateRole();
+                    break;
 
-            case 'Update employee manager':
-                update.updateManager();
-                break;
+                case 'Update employee manager':
+                    updateManager();
+                    break;
 
-            default:
-                console.log(`Invalid action: ${answer.action}`);
-                break;
-        }
+                default:
+                    console.log(`Invalid action: ${answer.updateChoice}`);
+                    break;
+            }
+        })
+};
+
+const updateRole = () => {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: "roleUpdateFirst",
+            message: "Please enter the employee's first name"
+        },
+        {
+            type: 'input',
+            name: "roleUpdateLast",
+            message: "Please enter the employee's last name"
+        },
+        {
+            type: 'input',
+            name: "roleUpdateNew",
+            message: "Please enter the employee's new role"
+        },
+    ]).then((answer) => {
+        console.log('Updating role...\n');
+        const query = connection.query(
+            'UPDATE employee SET ? WHERE ?',
+            [
+                {
+                    role_id: answer.roleUpdateNew,
+                },
+                {
+                    first_name: answer.roleUpdateFirst,
+                    last_name: answer.roleUpdateLast,
+                },
+            ],
+            (err, res) => {
+                if (err) throw err;
+                console.log(`${res.affectedRows} role updated!\n`);
+            }
+        );
+    })
+};
+
+const updateManager = () => {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: "managerUpdateFirst",
+            message: "Please enter the employee's first name"
+        },
+        {
+            type: 'input',
+            name: "managerUpdateLast",
+            message: "Please enter the employee's last name"
+        },
+        {
+            type: 'input',
+            name: "managerUpdateNew",
+            message: "Please enter the employee's new manager"
+        },
+    ]).then((answer) => {
+        console.log('Updating manager...\n');
+        const query = connection.query(
+            'UPDATE employee SET ? WHERE ?',
+            [
+                {
+                    manager_id: answer.managerUpdateNew,
+                },
+                {
+                    first_name: answer.managerUpdateFirst,
+                    last_name: answer.managerUpdateLast
+                },
+            ],
+            (err, res) => {
+                if (err) throw err;
+                console.log(`${res.affectedRows} manager updated!\n`);
+            }
+        );
     })
 };
 
 // inquirer prompt for the user to delete information from the database if they select 'delete'
 const deleteData = () => {
     inquirer.prompt({
-        type: 'rawlist',
-        name: 'viewChoice',
+        type: 'list',
+        name: 'deleteChoice',
         message: 'What would you like to delete?',
         choices: [
             'Delete department',
@@ -305,23 +373,96 @@ const deleteData = () => {
             'Delete employee',
         ]
     })
-    .then((answer) => {
-        switch (answer.userChoice) {
-            case 'Delete department':
-                del.deleteDepartment();
-                break;
+        .then((answer) => {
+            switch (answer.viewChoice) {
+                case 'Delete department':
+                    deleteDepartment();
+                    break;
 
-            case 'Delete role':
-                del.deleteRole();
-                break;
+                case 'Delete role':
+                    deleteRole();
+                    break;
 
-            case 'Delete employee':
-                del.deleteEmployee();
-                break;
+                case 'Delete employee':
+                    deleteEmployee();
+                    break;
 
-            default:
-                console.log(`Invalid action: ${answer.action}`);
-                break;
-        }
-    })
+                default:
+                    console.log(`Invalid action: ${answer.deleteChoice}`);
+                    break;
+            }
+        })
 }
+
+const deleteDepartment = () => {
+    inquirer.prompt(
+        {
+            type: 'input',
+            name: "departmentDelete",
+            message: "Please enter the department you would like to remove"
+        }
+        ).then((answer) => {
+        console.log('Deleting the chosen department...\n');
+        connection.query(
+            'DELETE FROM department WHERE ?',
+            {
+                name: answer.departmentDelete,
+            },
+            (err, res) => {
+                if (err) throw err;
+                console.log(`${res.affectedRows} departments deleted!\n`);
+            }
+        );
+    })
+};
+
+const deleteRole = () => {
+    inquirer.prompt(
+        {
+            type: 'input',
+            name: "roleDelete",
+            message: "Please enter the role you would like to remove"
+        }
+        ).then((answer) => {
+        console.log('Deleting the chosen role...\n');
+        connection.query(
+            'DELETE FROM role WHERE ?',
+            {
+                name: answer.roleDelete,
+            },
+            (err, res) => {
+                if (err) throw err;
+                console.log(`${res.affectedRows} roles removed!\n`);
+            }
+        );
+    })
+};
+
+const deleteEmployee = () => {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: "employeeDeleteFirst",
+            message: "Please enter the employee's first name"
+        },
+        {
+            type: 'input',
+            name: "employeeDeleteLast",
+            message: "Please enter the employee's last name"
+        }
+    ]).then((answer) => {
+        console.log('Removing employee...\n');
+        connection.query(
+            'DELETE FROM employee WHERE ?',
+            {
+                first_name: answer.managerUpdateFirst,
+                last_name: answer.managerUpdateLast
+            },
+            (err, res) => {
+                if (err) throw err;
+                console.log(`${res.affectedRows} employee removed!\n`);
+            }
+        );
+    })
+};
+
