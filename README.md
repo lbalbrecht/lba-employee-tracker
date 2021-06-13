@@ -39,6 +39,28 @@ if inquirer does not appear as a dependency, the user runs the following command
 npm i inquirer
 ```
 
+### Connecting to the database
+
+In order to add information to the database, the user must initialize mysql. To do this the user runs the following command:
+
+```
+mysql -u root -p
+```
+
+The user will be prompted to enter the database password, which is simply "password" (note, password is case sensitive). If done correctly, the user will enter the mysql terminal. From there, the user will input the following command to connect to the mysql database
+
+```
+source db/schema.sql
+```
+
+This command will run the program in the schema.sql file, which builds the database and creates and seeds the tables. To connect the database to the application, the user inputs the following command:
+
+```
+use employee_trackerdb
+```
+
+Once the database is connected, the user may exit the mysql terminal by inputting "exit" or "quit"
+
 ### Launching
 
 Once the npm packages have been installed, the user launches the application by entering the following command:
