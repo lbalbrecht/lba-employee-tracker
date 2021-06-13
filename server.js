@@ -69,6 +69,7 @@ const createData = () => {
             'Add new department',
             'Add new role',
             'Add new employee',
+            'Go back',
         ]
     })
         .then((answer) => {
@@ -83,6 +84,10 @@ const createData = () => {
 
                 case 'Add new employee':
                     addEmployee();
+                    break;
+
+                case "Go back":
+                    runTracker();
                     break;
 
                 default:
@@ -114,7 +119,6 @@ const addDepartment = () => {
             );
             console.log(query.sql);
             runTracker();
-
         });
 };
 // adds a new role
@@ -212,6 +216,7 @@ const readData = () => {
             'View departments',
             'View roles',
             'View employees',
+            "Go back"
         ]
     })
         .then((answer) => {
@@ -226,6 +231,10 @@ const readData = () => {
 
                 case 'View employees':
                     viewEmployee();
+                    break;
+
+                case "Go back":
+                    runTracker();
                     break;
 
                 default:
@@ -273,7 +282,8 @@ const updateData = () => {
         message: 'What would you like to view?',
         choices: [
             'Update employee role',
-            'Update employee manager'
+            'Update employee manager',
+            'Go back'
         ]
     })
         .then((answer) => {
@@ -284,6 +294,10 @@ const updateData = () => {
 
                 case 'Update employee manager':
                     updateManager();
+                    break;
+
+                case "Go back":
+                    runTracker();
                     break;
 
                 default:
@@ -385,10 +399,11 @@ const deleteData = () => {
             'Delete department',
             'Delete role',
             'Delete employee',
+            'Go back',
         ]
     })
         .then((answer) => {
-            switch (answer.viewChoice) {
+            switch (answer.deleteChoice) {
                 case 'Delete department':
                     deleteDepartment();
                     break;
@@ -399,6 +414,10 @@ const deleteData = () => {
 
                 case 'Delete employee':
                     deleteEmployee();
+                    break;
+
+                case 'Go back':
+                    runTracker();
                     break;
 
                 default:
@@ -414,7 +433,7 @@ const deleteDepartment = () => {
         {
             type: 'input',
             name: "departmentDelete",
-            message: "Please enter the department you would like to remove"
+            message: "Please enter the name of the department you would like to remove"
         }
     ).then((answer) => {
         console.log('Deleting the chosen department...\n');
@@ -428,6 +447,7 @@ const deleteDepartment = () => {
                 console.log(`${res.affectedRows} departments deleted!\n`);
             }
         );
+        runTracker();
     })
 };
 
@@ -451,6 +471,7 @@ const deleteRole = () => {
                 console.log(`${res.affectedRows} roles removed!\n`);
             }
         );
+        runTracker();
     })
 };
 
@@ -480,6 +501,7 @@ const deleteEmployee = () => {
                 console.log(`${res.affectedRows} employee removed!\n`);
             }
         );
+        runTracker();
     })
 };
 
