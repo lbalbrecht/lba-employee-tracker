@@ -1,15 +1,20 @@
+-- prevent duplicate databases
 DROP DATABASE IF EXISTS employee_trackerdb;
 
+-- recreate the database if deleted, or create it if performing initial run
 CREATE DATABASE employee_trackerdb;
 
+-- define the database to be used by the app
 USE employee_trackerdb;
 
+-- create a table to store department info
 CREATE TABLE department (
     id INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(30) NOT NULL,
     PRIMARY KEY (id)
 );
 
+-- create a table to store role info
 CREATE TABLE role (
     id INT NOT NULL AUTO_INCREMENT,
     title VARCHAR(30) NOT NULL,
@@ -18,6 +23,7 @@ CREATE TABLE role (
     PRIMARY KEY (id)
 );
 
+-- create a table to store employee info
 CREATE TABLE employee (
     id INT NOT NULL AUTO_INCREMENT,
     first_name VARCHAR(30) NOT NULL,
@@ -27,6 +33,7 @@ CREATE TABLE employee (
     PRIMARY KEY (id)
 );
 
+-- add seed data to the department table
 INSERT INTO department(name)
 VALUES('Information Technology');
 
@@ -36,6 +43,7 @@ VALUES("Human Resources");
 INSERT INTO department(name)
 VALUES('Legal');
 
+-- add seed data to the role table
 INSERT INTO role(title, salary, department_id)
 VALUES("Engineer", "100000", "1");
 
@@ -54,6 +62,7 @@ VALUES("Copyright attorney", "90000", "3");
 INSERT INTO role(title, salary, department_id)
 VALUES("Defense attorney", "110000", "3");
 
+-- add seed data to the employee table
 INSERT INTO employee(first_name, last_name, role_id, manager_id)
 VALUES("Steve", "Harvey", "1", "2");
 
